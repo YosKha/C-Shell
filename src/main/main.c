@@ -18,7 +18,11 @@ typedef struct args {
         char **argv;
 } args_t;
 
-
+/**
+ * @brief Read line enter in the terminal
+ *
+ * @return char* of the line read in the terminal
+ */
 char* lsh_read_line(void){
   int bufsize = LSH_RL_BUFSIZE;
   char* buffer = malloc(sizeof(char) * bufsize);
@@ -53,6 +57,12 @@ char* lsh_read_line(void){
   }
 }
 
+/**
+ * @brief split different arguments from a line command
+ *
+ * @param[in] the line command
+ * @return different argument split in an args_t
+ */
 args_t lsh_parse(char* line){
     int bufsize = LSH_TK_BUFSIZE;
     char **token_buffer = malloc(sizeof(char *) * LSH_TK_BUFSIZE);
@@ -86,6 +96,12 @@ args_t lsh_parse(char* line){
     return res;
 }
 
+/**
+ * @brief execute an external program given by args
+ *
+ * @param args of the program to execute
+ * @return 1
+ */
 int lsh_launch(args_t args){
     pid_t pid;
     int status;
@@ -111,8 +127,13 @@ int lsh_launch(args_t args){
     return 1; // execute only by the parent process
 }
 
-
-
+/**
+ * @brief execute a command line. Either the command line is a builtin command (cd, help, ....) or
+ *        execute external program with lsh_launch
+ *
+ * @param args of the command to execute
+ * @return the response on the execution. return 1 to continue continue, 0 to end the shell
+ */
 int lsh_execute(args_t args){
     char **argv = args.argv;
     if(argv[0] == NULL){
@@ -129,6 +150,9 @@ int lsh_execute(args_t args){
     return lsh_launch(args);
 }
 
+/**
+ * @brief start the main loop of the program to read and execute programs and commands.
+ */
 void lsh_loop(void){
   char *line;
   args_t args;
