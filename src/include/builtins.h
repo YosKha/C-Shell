@@ -7,14 +7,14 @@
 
 typedef int(*cmd_func_t) (char**);
 
-typedef struct command{
+typedef struct builtins{
     const char* name;
     cmd_func_t func;
 }cmd_t;
 
 
-extern int nb_commands;
-extern cmd_t command_list[];
+extern int nb_builtins;
+extern cmd_t builtins_list[];
 
 
 /*Commands declaration*/
