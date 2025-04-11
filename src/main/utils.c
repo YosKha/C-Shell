@@ -2,18 +2,44 @@
 // Created by Yohann Marguier on 10/04/2025.
 //
 
-#include <termios.h>
-#include <unistd.h>
+#include "stdlib.h"
+#include <string.h>
+#include "../include/utils.h"
 
-void enableRawMode(void){
-    struct termios oldt, newt;
+const int LSH_HISTORY_BUFSIZE = 1024;
 
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-
-    // disable canonic mode
-    newt.c_lflag &= ~(ICANON | ECHO);
-
-    // enable changes
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+cmd_history_t initCmdHistory(){
+    cmd_history_t history;
+    history.cursor = 0;
+    history.length = 0;
+    history.buffer = malloc(sizeof(char*) * LSH_HISTORY_BUFSIZE);
+    return history;
 }
+
+void freeHistory(cmd_history_t history){
+    free(history.buffer);
+}
+
+int pushToHistory(cmd_history_t *history, char *cmd){
+    history->buffer[history->length] = strdup(cmd);
+    history->cursor = history->length;
+    history->length++;
+    return 1;
+}
+
+char* getCmdFromHistory(cmd_history_t history, int index){
+    return history.buffer[index];
+}
+
+int isHistoryEmpty(cmd_history_t history){
+    return history.length == 0;
+}
+
+void resetHistoryCursor(cmd_history_t *history){
+    if(isHistoryEmpty(*history)){
+        history->cursor = 0;
+    }else{
+        history->cursor = history->length-1;
+    }
+}
+

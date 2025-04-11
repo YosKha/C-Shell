@@ -7,11 +7,13 @@
 
 #include "../include/utils.h"
 
-char *lsh_read_line(void);
+char *lsh_read_line(cmd_history_t);
 args_t lsh_parse(char *);
 int lsh_launch(args_t);
 int lsh_execute(args_t);
 
 void lsh_loop(void);
+
+void enableRawMode(void);
 
 #endif //SHELL_SHELL_H

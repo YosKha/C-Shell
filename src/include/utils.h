@@ -5,7 +5,7 @@
 #ifndef SHELL_UTILS_H
 #define SHELL_UTILS_H
 
-#define LSH_HISTORY_BUFSIZE 1024;
+extern const int LSH_HISTORY_BUFSIZE;
 
 typedef struct args {
     int argc;
@@ -15,14 +15,16 @@ typedef struct args {
 typedef struct cmd_history{
     int cursor;
     int length;
-    args_t history[];
+    char **buffer;
 } cmd_history_t;
 
-void enableRawMode(void);
-char *catchUserInput(void);
 
-int pushToHistory(cmd_history_t history, args_t cmd);
-args_t getCommandeFromHistory(cmd_history_t history, int index);
+cmd_history_t initCmdHistory();
+void freeHistory(cmd_history_t);
+int pushToHistory(cmd_history_t *history, char *cmd);
+char* getCmdFromHistory(cmd_history_t history, int index);
+int isHistoryEmpty(cmd_history_t);
+void resetHistoryCursor(cmd_history_t*);
 
 
 #endif //SHELL_UTILS_H
