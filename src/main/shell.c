@@ -10,67 +10,15 @@
 #include <termios.h>
 #include "../include/builtins.h"
 #include "../include/shell.h"
-#include "../include/utils.h"
+#include "../include/key_events.h"
 
 #define LSH_RL_BUFSIZE 1024
 #define LSH_TK_BUFSIZE 64
 #define LSH_TK_DELIM " \t\r\n\a"
-#define RESET_LINE "\033[2K\033[G"
-#define ESC 27
-#define OPEN_BRACKET 91
-#define UP_ARROW 65
-#define DOWN_ARROW 66
 
 
 /**
- * @brief it takes charge of the ANSI Escape such as :
- *        - Up/Down arrow
- *        - Backslash
- * @param c is a int. it refers to an char ASCII code
- * @param buffer is the current comment input in the shell
- */
-int static ansi_esc_checker(int c, char *buffer, cmd_history_t *history){
-    if(c == ESC){
-        c = getchar();
-        if(c == OPEN_BRACKET){
-            c = getchar();
-            int cursor = history->cursor;
-            switch (c) {
-                case UP_ARROW:
-                    if(cursor >= 0 && history->length != 0) {
-                        const char* cmd = history->buffer[cursor];
-                        printf("%s> ", RESET_LINE);
-                        snprintf(buffer, 1024, "%s", cmd);
-                        printf("%s", buffer);
-                        fflush(stdout);
-                        if(cursor > 0){
-                            history->cursor--;
-                        }
-
-                    }
-                    return 1;
-                case DOWN_ARROW:
-                    if(cursor < history->length && history->length != 0) {
-                        const char* cmd = history->buffer[cursor];
-                        printf("%s> ", RESET_LINE);
-                        snprintf(buffer, 1024, "%s", cmd);
-                        printf("%s", buffer);
-                        fflush(stdout);
-                        if(cursor < history->length - 1){
-                            history->cursor++;
-                        }
-                    }
-                    return 1;
-            }
-
-        }
-    }
-    return 0;
-}
-
-
-/**
- * @brief Read line enter in the terminal
+ * @brief Read line enter in the terminal. It takes charges of key events
  *
  * @return char* of the line read in the terminal
  */
@@ -89,11 +37,13 @@ char* lsh_read_line(cmd_history_t history){
     while(1){
         c = getchar(); // this char is an int because we want to compare it with EOF(int)
 
-        if(ansi_esc_checker(c, buffer, &history)){
+        // catch ANSI events (up/down arrow, ...)
+        if(keyEventHandler(c, buffer, history)){
             continue;
         }
 
-        printf("%c", c);
+        printf("%c", c); // in the raw mode of the terminal, char is not automatically displayed;
+
         if(c == '\n'|| c == EOF){ // EOF = End Of File (int)
             return buffer;
         }else{
@@ -101,6 +51,7 @@ char* lsh_read_line(cmd_history_t history){
         }
         position++;
 
+        // realloc buffer is the user input is larger than the buffer;
         if (position >= bufsize) {
             bufsize += LSH_RL_BUFSIZE;
 
