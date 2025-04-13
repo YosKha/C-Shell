@@ -7,10 +7,14 @@
 #include "../include/utils.h"
 
 #define RESET_LINE "\033[2K\033[G"
+#define MOVE_RIGHT_CURSOR "\033[C"
+#define MOVE_LEFT_CURSOR "\033[D"
 #define ESC 27
 #define OPEN_BRACKET 91
 #define UP_ARROW 65
 #define DOWN_ARROW 66
+#define RIGHT_ARROW 67
+#define LEFT_ARROW 68
 
 
 /**
@@ -32,6 +36,12 @@ int keyEventHandler(int c, cmd_history_t history, char* buffer, int bufsize){
                     return 1;
                 case DOWN_ARROW:
                     downArrowEvent( &history, buffer,bufsize);
+                    return 1;
+                case RIGHT_ARROW:
+                    rightArrowEvent();
+                    return 1;
+                case LEFT_ARROW:
+                    leftArrowEvent();
                     return 1;
             }
         }
@@ -94,4 +104,13 @@ void downArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
         printf("%s", buffer);
         fflush(stdout);
     }
+}
+
+
+void rightArrowEvent(){
+    printf("%s", MOVE_RIGHT_CURSOR);
+}
+
+void leftArrowEvent(){
+    printf("%s", MOVE_LEFT_CURSOR);
 }

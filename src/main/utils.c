@@ -48,9 +48,10 @@ void setInitialCommand(cmd_history_t *history, char *initCommand, int initComman
 
 int pushToHistory(cmd_history_t *history, char *cmd){
     if(!history){
-        fprintf("Invalid arguments, null pointer in pushToHistory");
+        fprintf(stderr, "Invalid arguments, null pointer in pushToHistory");
         return -1;
     }
+
     // should manage a buffer overflow with realloc
     history->commands[history->length] = strdup(cmd);
     history->cursor = history->length;

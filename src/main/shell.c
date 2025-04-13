@@ -38,7 +38,7 @@ char* lsh_read_line(cmd_history_t history){
         c = getchar(); // this char is an int because we want to compare it with EOF(int)
 
         // catch ANSI events (up/down arrow, ...)
-        if(keyEventHandler(c, buffer, history)){
+        if(keyEventHandler(c, history, buffer, position)){
             continue;
         }
 
@@ -182,7 +182,7 @@ void lsh_loop(void){
         status = lsh_execute(args);
     }while(status);
 
-    freeHistory(shell_history);
+    freeHistory(&shell_history);
 }
 
 
