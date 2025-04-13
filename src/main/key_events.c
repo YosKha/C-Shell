@@ -18,8 +18,8 @@
  *
  * @param c is the first char we want to check its an ANSI Escape
  * @param buffer stores the current command line typed by the user
- * @param history stock all old commands execute by the shell
- * @return 1 is a event is handle, else 0
+ * @param history stocks all old commands executed by the shell
+ * @return 1 is an event is handled, else 0
  */
 int keyEventHandler(int c, char* buffer, cmd_history_t history){
     if(c == ESC){
@@ -40,10 +40,10 @@ int keyEventHandler(int c, char* buffer, cmd_history_t history){
 }
 
 /**
- * @brief scroll up in the commands history of the shell and display the correct command
+ * @brief scroll up in the commands history of the shell and displays the correct command
  *
  * @param buffer stores the current command line typed by the user
- * @param history stock all old commands execute by the shell
+ * @param history stocks all old commands executed by the shell
  */
 void upArrowEvent(char *buffer, cmd_history_t *history){
     int cursor = history->cursor;
@@ -61,10 +61,10 @@ void upArrowEvent(char *buffer, cmd_history_t *history){
 }
 
 /**
- * @brief scroll down in the commands history of shell and display the correct command
+ * @brief scroll down in the commands history of shell and displays the correct command
  *
  * @param buffer stores the current command line typed by the user
- * @param history stock all old commands execute by the shell
+ * @param history stocks all old commands executed by the shell
  */
 void downArrowEvent(char *buffer, cmd_history_t *history){
     int cursor = history->cursor;
