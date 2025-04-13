@@ -169,20 +169,20 @@ void lsh_loop(void){
     char *line;
     args_t args;
     int status;
-    cmd_history_t shell_history = initCmdHistory();
-    pushToHistory(&shell_history, "man man");
-    pushToHistory(&shell_history, "gcc -v");
+    cmd_history_t *shell_history = initCmdHistory();
+    pushToHistory(shell_history, "man man");
+    pushToHistory(shell_history, "gcc -v");
     enableRawMode();
 
     do {
         printf("> ");
-        line = lsh_read_line(shell_history);
-        pushToHistory(&shell_history, line);
+        line = lsh_read_line(*shell_history);
+        pushToHistory(shell_history, line);
         args = lsh_parse(line);
         status = lsh_execute(args);
     }while(status);
 
-    freeHistory(&shell_history);
+    freeHistory(shell_history);
 }
 
 

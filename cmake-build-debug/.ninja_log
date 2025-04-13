@@ -19,3 +19,8 @@
 2	156	1744579354111794152	CMakeFiles/Shell.dir/src/main/shell.c.o	b3e7051b7d8a0e50
 2	156	1744579354112020821	CMakeFiles/Shell.dir/src/main/utils.c.o	423ed68c305cea7c
 156	294	1744579354266057296	Shell	6d6d14b50ccea521
+7	210	1744580704557026326	CMakeFiles/Shell.dir/src/main/main.c.o	c54e8aa6032c2a3a
+7	210	1744580704557644911	CMakeFiles/Shell.dir/src/main/key_events.c.o	b093872e0ecf456c
+7	210	1744580704557503910	CMakeFiles/Shell.dir/src/main/utils.c.o	423ed68c305cea7c
+2	182	1744580729401899859	CMakeFiles/Shell.dir/src/main/shell.c.o	b3e7051b7d8a0e50
+182	307	1744580729581154483	Shell	6d6d14b50ccea521

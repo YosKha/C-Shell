@@ -20,7 +20,7 @@ typedef struct cmd_history{
 } cmd_history_t;
 
 
-cmd_history_t initCmdHistory();
+cmd_history_t *initCmdHistory();
 void freeHistory(cmd_history_t *);
 void freeInitialCommand(cmd_history_t *);
 void setInitialCommand(cmd_history_t*, char*, int);

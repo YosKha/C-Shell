@@ -10,11 +10,11 @@
 
 const int LSH_HISTORY_BUFSIZE = 1024;
 
-cmd_history_t initCmdHistory(){
-    cmd_history_t history;
-    history.cursor = -1;
-    history.length = 0;
-    history.commands = malloc(sizeof(char*) * LSH_HISTORY_BUFSIZE);
+cmd_history_t *initCmdHistory(){
+    cmd_history_t *history = malloc(sizeof(cmd_history_t));
+    history->cursor = -1;
+    history->length = 0;
+    history->commands = malloc(sizeof(char*) * LSH_HISTORY_BUFSIZE);
     return history;
 }
 
@@ -23,6 +23,9 @@ void freeHistory(cmd_history_t *history){
         free(history->commands);
     }
     freeInitialCommand(history);
+    if(history){
+        free(history);
+    }
 }
 
 void freeInitialCommand(cmd_history_t *history) {
