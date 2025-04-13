@@ -7,10 +7,10 @@
 
 #include "../include/utils.h"
 
-int keyEventHandler(int, char *, cmd_history_t);
+int keyEventHandler(int c, cmd_history_t history, char *buffer, int);
 
-void upArrowEvent(char*, cmd_history_t*);
-void downArrowEvent(char*, cmd_history_t*);
+void upArrowEvent(cmd_history_t*, char*, int);
+void downArrowEvent(cmd_history_t*, char*, int);
 
 
 #endif //SHELL_KEY_EVENTS_H

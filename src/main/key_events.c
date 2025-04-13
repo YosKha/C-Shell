@@ -21,17 +21,17 @@
  * @param history stocks all old commands executed by the shell
  * @return 1 is an event is handled, else 0
  */
-int keyEventHandler(int c, char* buffer, cmd_history_t history){
+int keyEventHandler(int c, cmd_history_t history, char* buffer, int bufsize){
     if(c == ESC){
         c = getchar();
         if(c == OPEN_BRACKET){
             c = getchar();
             switch (c) {
                 case UP_ARROW:
-                    upArrowEvent(buffer, &history);
+                    upArrowEvent(&history, buffer, bufsize);
                     return 1;
                 case DOWN_ARROW:
-                    downArrowEvent(buffer, &history);
+                    downArrowEvent( &history, buffer,bufsize);
                     return 1;
             }
         }
@@ -45,15 +45,25 @@ int keyEventHandler(int c, char* buffer, cmd_history_t history){
  * @param buffer stores the current command line typed by the user
  * @param history stocks all old commands executed by the shell
  */
-void upArrowEvent(char *buffer, cmd_history_t *history){
+void upArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
     int cursor = history->cursor;
 
-    if(cursor >= 0 && history->length != 0) {
-        const char* cmd = history->buffer[cursor];
-        printf("%s> ", RESET_LINE);
+    // checks limits of the history
+    if(cursor >= 0) {
+        // memorizes the input of the user
+        if(cursor == 0){
+            setInitialCommand(history, buffer, bufsize);
+        }
+
+        // gets the targeted command
+        const char* cmd = history->commands[cursor];
+        // modifies the buffer to match the targeted command
         snprintf(buffer, 1024, "%s", cmd);
+        // displays the targeted command
+        printf("%s> ", RESET_LINE);
         printf("%s", buffer);
         fflush(stdout);
+        // updates the cursor
         if(cursor > 0){
             history->cursor--;
         }
@@ -66,17 +76,22 @@ void upArrowEvent(char *buffer, cmd_history_t *history){
  * @param buffer stores the current command line typed by the user
  * @param history stocks all old commands executed by the shell
  */
-void downArrowEvent(char *buffer, cmd_history_t *history){
+void downArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
     int cursor = history->cursor;
 
-    if(cursor < history->length && history->length != 0) {
-        const char* cmd = history->buffer[cursor];
-        printf("%s> ", RESET_LINE);
-        snprintf(buffer, 1024, "%s", cmd);
-        printf("%s", buffer);
-        fflush(stdout);
+    // checks the limits of the history
+    if(cursor < history->length) {
+        // updates the cursor
         if(cursor < history->length - 1){
             history->cursor++;
         }
+        //gets the targeted command
+        const char* cmd = history->commands[cursor];
+        //modifies the buffer to match the targeted command
+        snprintf(buffer, 1024, "%s", cmd);
+        //displays the targeted command
+        printf("%s> ", RESET_LINE);
+        printf("%s", buffer);
+        fflush(stdout);
     }
 }

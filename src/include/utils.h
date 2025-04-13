@@ -15,12 +15,15 @@ typedef struct args {
 typedef struct cmd_history{
     int cursor;
     int length;
-    char **buffer;
+    char **commands;
+    char *initial_command;
 } cmd_history_t;
 
 
 cmd_history_t initCmdHistory();
-void freeHistory(cmd_history_t);
+void freeHistory(cmd_history_t *);
+void freeInitialCommand(cmd_history_t *);
+void setInitialCommand(cmd_history_t*, char*, int);
 int pushToHistory(cmd_history_t *history, char *cmd);
 char* getCmdFromHistory(cmd_history_t history, int index);
 int isHistoryEmpty(cmd_history_t);
