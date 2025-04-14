@@ -25,23 +25,23 @@
  * @param history stocks all old commands executed by the shell
  * @return 1 is an event is handled, else 0
  */
-int keyEventHandler(int c, cmd_history_t history, char* buffer, int bufsize){
+int keyEventHandler(int c, cmd_history_t history, input_buffer_t *inputBuffer){
     if(c == ESC){
         c = getchar();
         if(c == OPEN_BRACKET){
             c = getchar();
             switch (c) {
                 case UP_ARROW:
-                    upArrowEvent(&history, buffer, bufsize);
+                    upArrowEvent(&history, inputBuffer);
                     return 1;
                 case DOWN_ARROW:
-                    downArrowEvent( &history, buffer,bufsize);
+                    downArrowEvent( &history, inputBuffer);
                     return 1;
                 case RIGHT_ARROW:
-                    rightArrowEvent();
+                    rightArrowEvent(inputBuffer);
                     return 1;
                 case LEFT_ARROW:
-                    leftArrowEvent();
+                    leftArrowEvent(inputBuffer);
                     return 1;
             }
         }
@@ -55,23 +55,23 @@ int keyEventHandler(int c, cmd_history_t history, char* buffer, int bufsize){
  * @param buffer stores the current command line typed by the user
  * @param history stocks all old commands executed by the shell
  */
-void upArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
+void upArrowEvent(cmd_history_t *history, input_buffer_t *inputBuffer){
     int cursor = history->cursor;
 
     // checks limits of the history
     if(cursor >= 0) {
         // memorizes the input of the user
         if(cursor == 0){
-            setInitialCommand(history, buffer, bufsize);
+            //setInitialCommand(history, buffer, bufsize);
         }
 
         // gets the targeted command
         const char* cmd = history->commands[cursor];
         // modifies the buffer to match the targeted command
-        snprintf(buffer, 1024, "%s", cmd);
+        loadIntoInitBuffer(inputBuffer, cmd, 1024);
         // displays the targeted command
         printf("%s> ", RESET_LINE);
-        printf("%s", buffer);
+        printInputBuffer(*inputBuffer);
         fflush(stdout);
         // updates the cursor
         if(cursor > 0){
@@ -86,7 +86,7 @@ void upArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
  * @param buffer stores the current command line typed by the user
  * @param history stocks all old commands executed by the shell
  */
-void downArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
+void downArrowEvent(cmd_history_t *history, input_buffer_t *inputBuffer){
     int cursor = history->cursor;
 
     // checks the limits of the history
@@ -98,19 +98,21 @@ void downArrowEvent(cmd_history_t *history, char *buffer, int bufsize){
         //gets the targeted command
         const char* cmd = history->commands[cursor];
         //modifies the buffer to match the targeted command
-        snprintf(buffer, 1024, "%s", cmd);
+        loadIntoInitBuffer(inputBuffer, cmd, 1024);
         //displays the targeted command
         printf("%s> ", RESET_LINE);
-        printf("%s", buffer);
+        printInputBuffer(*inputBuffer);
         fflush(stdout);
     }
 }
 
 
-void rightArrowEvent(){
+void rightArrowEvent(input_buffer_t* inputBuffer){
+    shiftRightInputBuffer(inputBuffer);
     printf("%s", MOVE_RIGHT_CURSOR);
 }
 
-void leftArrowEvent(){
+void leftArrowEvent(input_buffer_t *inputBuffer){
+    shiftLeftInputBuffer(inputBuffer);
     printf("%s", MOVE_LEFT_CURSOR);
 }

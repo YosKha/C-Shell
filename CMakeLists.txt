@@ -8,4 +8,5 @@ add_executable(Shell
         src/main/builtins.c
         src/main/shell.c
         src/main/utils.c
-        src/main/key_events.c)
+        src/main/key_events.c
+        src/main/input_buffer.c)
