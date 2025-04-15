@@ -84,18 +84,22 @@ int addToInputBuffer(input_buffer_t *inputBuffer, char c){
 }
 
 int removeFromInputBuffer(input_buffer_t *inputBuffer){
-    char *data = inputBuffer->data;
-    int size = inputBuffer->size;
-    int cursor = inputBuffer->cursor;
+    if(inputBuffer->size > 0){
+        char *data = inputBuffer->data;
+        int size = inputBuffer->size;
+        int cursor = inputBuffer->cursor;
 
-    // add the new char in the correct address
-    if(cursor != size){
-        memmove(data+cursor-1, data + cursor, size - cursor);
+        // add the new char in the correct address
+        if(cursor != size){
+            memmove(data+cursor-1, data + cursor, size - cursor);
+        }
+
+        inputBuffer ->size--;
+        inputBuffer->cursor--;
+        return 0;
     }
+    return -1;
 
-    inputBuffer ->size--;
-    inputBuffer->cursor--;
-    return 0;
 }
 
 
@@ -113,7 +117,13 @@ char *getDataFromInputBuffer(const input_buffer_t *inputBuffer){
     if (!inputBuffer || !inputBuffer->data || inputBuffer->size == 0){
         return NULL;
     }
-    return inputBuffer->data;
+    char *dataCopy = malloc(inputBuffer->size);
+    if(!dataCopy){
+        fprintf(stderr, "lsh : malloc failed in getDataFromInputBuffer");
+        return NULL;
+    }
+    memcpy(dataCopy, inputBuffer->data, inputBuffer->size);
+    return dataCopy;
 }
 
 int shiftRightInputBuffer(input_buffer_t *inputBuffer){

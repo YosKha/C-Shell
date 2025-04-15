@@ -15,6 +15,31 @@
 #define DOWN_ARROW 66
 #define RIGHT_ARROW 67
 #define LEFT_ARROW 68
+#define BACKSPACE 8
+#define DELETE 127
+
+
+int static ansiEscHangler(cmd_history_t history, input_buffer_t *inputBuffer){
+   int c = getchar();
+    if(c == OPEN_BRACKET) {
+        c = getchar();
+        switch (c) {
+            case UP_ARROW:
+                upArrowEvent(&history, inputBuffer);
+                return 1;
+            case DOWN_ARROW:
+                downArrowEvent(&history, inputBuffer);
+                return 1;
+            case RIGHT_ARROW:
+                rightArrowEvent(inputBuffer);
+                return 1;
+            case LEFT_ARROW:
+                leftArrowEvent(inputBuffer);
+                return 1;
+        }
+    }
+    return 0;
+}
 
 
 /**
@@ -26,25 +51,15 @@
  * @return 1 is an event is handled, else 0
  */
 int keyEventHandler(int c, cmd_history_t history, input_buffer_t *inputBuffer){
-    if(c == ESC){
-        c = getchar();
-        if(c == OPEN_BRACKET){
-            c = getchar();
-            switch (c) {
-                case UP_ARROW:
-                    upArrowEvent(&history, inputBuffer);
-                    return 1;
-                case DOWN_ARROW:
-                    downArrowEvent( &history, inputBuffer);
-                    return 1;
-                case RIGHT_ARROW:
-                    rightArrowEvent(inputBuffer);
-                    return 1;
-                case LEFT_ARROW:
-                    leftArrowEvent(inputBuffer);
-                    return 1;
-            }
-        }
+    switch (c) {
+        case ESC:
+            return ansiEscHangler(history, inputBuffer);
+        case DELETE:
+            removeFromInputBuffer(inputBuffer);
+            printf("%s> ", RESET_LINE);
+            fflush(stdout);
+            printInputBuffer(inputBuffer);
+            return 1;
     }
     return 0;
 }

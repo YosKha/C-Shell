@@ -39,15 +39,18 @@ char* lsh_read_line(cmd_history_t history){
 
         if(c == '\n'|| c == EOF){ // EOF = End Of File (int)
             printf("\n");
-            return inputBuffer->data;
+            char *data = getDataFromInputBuffer(inputBuffer);
+            freeInputBuffer(inputBuffer);
+            return data;
         }else{
             addToInputBuffer(inputBuffer, (char) c);
             printf("\r> ");
             fflush(stdout);
             printInputBuffer(inputBuffer);
-
         }
     }
+
+
 }
 
 
