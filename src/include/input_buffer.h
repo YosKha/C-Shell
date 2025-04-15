@@ -17,14 +17,14 @@ void freeInputBuffer(input_buffer_t *);
 void reallocInitBuffer(input_buffer_t *);
 void loadIntoInitBuffer(input_buffer_t *, char*, int size);
 
-int isInputBufferEmpty(input_buffer_t);
+int isInputBufferEmpty(const input_buffer_t*);
 
 int addToInputBuffer(input_buffer_t *, char);
 int removeFromInputBuffer(input_buffer_t*);
 int clearInputBuffer(input_buffer_t *);
 
-void printInputBuffer(input_buffer_t);
-char * getDataFromInputBuffer(input_buffer_t);
+void printInputBuffer(const input_buffer_t*);
+char * getDataFromInputBuffer(const input_buffer_t*);
 
 int shiftRightInputBuffer(input_buffer_t*);
 int shiftLeftInputBuffer(input_buffer_t*);

@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define INPUT_BUFSIZE 1024
+#define INPUT_BUFSIZE 128
 
 input_buffer_t *initInputBuffer(){
-    input_buffer_t *inputBuffer = malloc(sizeof(inputBuffer));
+    input_buffer_t *inputBuffer = malloc(sizeof(input_buffer_t));
     if(!inputBuffer){
         fprintf(stderr, "lsh : malloc failed");
         return NULL;
@@ -58,8 +58,8 @@ void loadIntoInitBuffer(input_buffer_t * inputBuffer, char *data, int dataSize){
 }
 
 
-int isInputBufferEmpty(input_buffer_t inputBuffer){
-    return inputBuffer.size == 0;
+int isInputBufferEmpty(const input_buffer_t *inputBuffer){
+    return inputBuffer->size == 0;
 }
 
 int addToInputBuffer(input_buffer_t *inputBuffer, char c){
@@ -78,6 +78,8 @@ int addToInputBuffer(input_buffer_t *inputBuffer, char c){
     }
     data[cursor] = c;
 
+    inputBuffer ->size++;
+    inputBuffer->cursor++;
     return 0;
 }
 
@@ -91,13 +93,22 @@ int removeFromInputBuffer(input_buffer_t *inputBuffer){
         memmove(data+cursor-1, data + cursor, size - cursor);
     }
 
+    inputBuffer ->size--;
+    inputBuffer->cursor--;
     return 0;
 }
 
 
-void printInputBuffer(input_buffer_t inputBuffer){
-    fwrite(inputBuffer.data, sizeof(char), inputBuffer.size, stdout);
+void printInputBuffer(const input_buffer_t *inputBuffer){
+    fwrite(inputBuffer->data, sizeof(char), inputBuffer->size, stdout);
     fflush(stdout);
+}
+
+char *getDataFromInputBuffer(const input_buffer_t *inputBuffer){
+    if (!inputBuffer || !inputBuffer->data || inputBuffer->size == 0){
+        return NULL;
+    }
+    return inputBuffer->data;
 }
 
 int shiftRightInputBuffer(input_buffer_t *inputBuffer){
