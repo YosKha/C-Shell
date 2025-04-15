@@ -11,6 +11,7 @@
 #include "../include/builtins.h"
 #include "../include/shell.h"
 #include "../include/key_events.h"
+#include "../include/input_buffer.h"
 
 #define LSH_RL_BUFSIZE 1024
 #define LSH_TK_BUFSIZE 64
@@ -18,48 +19,33 @@
 
 
 /**
- * @brief Read line enter in the terminal. It takes charges of key events
+ * @brief Read line enter in the terminal and takes charges of key events
  *
  * @return char* of the line read in the terminal
  */
 char* lsh_read_line(cmd_history_t history){
     int bufsize = LSH_RL_BUFSIZE;
-    char* buffer = malloc(sizeof(char) * bufsize);
-    int position = 0;
-    int c;
+    input_buffer_t *inputBuffer = initInputBuffer();
 
-    // check malloc
-    if (!buffer) {
-        fprintf(stderr, "lsh : malloc failed\n");
-        exit(EXIT_FAILURE);
-    }
+    int c;
 
     while(1){
         c = getchar(); // this char is an int because we want to compare it with EOF(int)
 
         // catch ANSI events (up/down arrow, ...)
-        if(keyEventHandler(c, history, buffer, position)){
+        if(keyEventHandler(c, history, inputBuffer)){
             continue;
         }
 
-        printf("%c", c); // in the raw mode of the terminal, char is not automatically displayed;
-
         if(c == '\n'|| c == EOF){ // EOF = End Of File (int)
-            return buffer;
+            printf("\n");
+            return inputBuffer->data;
         }else{
-            buffer[position] = c;
-        }
-        position++;
+            addToInputBuffer(inputBuffer, (char) c);
+            printf("\r> ");
+            fflush(stdout);
+            printInputBuffer(inputBuffer);
 
-        // realloc buffer is the user input is larger than the buffer;
-        if (position >= bufsize) {
-            bufsize += LSH_RL_BUFSIZE;
-
-            buffer = realloc(buffer, bufsize);
-            if (!buffer) {
-                fprintf(stderr, "lsh : realloc failed\n");
-                exit(EXIT_FAILURE);
-            }
         }
     }
 }
@@ -99,6 +85,7 @@ args_t lsh_parse(char* line){
         }
         token = strtok(NULL, LSH_TK_DELIM);
     }
+
     token_buffer[position] = NULL;
     res.argv = token_buffer;
     res.argc = position;

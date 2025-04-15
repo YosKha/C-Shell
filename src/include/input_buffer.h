@@ -15,7 +15,7 @@ typedef struct input_buffer{
 input_buffer_t *initInputBuffer(void);
 void freeInputBuffer(input_buffer_t *);
 void reallocInitBuffer(input_buffer_t *);
-void loadIntoInitBuffer(input_buffer_t *, char*, int size);
+void loadIntoInitBuffer(input_buffer_t *, const char*, int size);
 
 int isInputBufferEmpty(const input_buffer_t*);
 

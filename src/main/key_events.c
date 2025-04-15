@@ -71,7 +71,7 @@ void upArrowEvent(cmd_history_t *history, input_buffer_t *inputBuffer){
         loadIntoInitBuffer(inputBuffer, cmd, 1024);
         // displays the targeted command
         printf("%s> ", RESET_LINE);
-        printInputBuffer(*inputBuffer);
+        printInputBuffer(inputBuffer);
         fflush(stdout);
         // updates the cursor
         if(cursor > 0){
@@ -101,7 +101,7 @@ void downArrowEvent(cmd_history_t *history, input_buffer_t *inputBuffer){
         loadIntoInitBuffer(inputBuffer, cmd, 1024);
         //displays the targeted command
         printf("%s> ", RESET_LINE);
-        printInputBuffer(*inputBuffer);
+        printInputBuffer(inputBuffer);
         fflush(stdout);
     }
 }

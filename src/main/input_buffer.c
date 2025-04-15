@@ -47,7 +47,7 @@ void reallocInputBuffer(input_buffer_t *inputBuffer){
 }
 
 
-void loadIntoInitBuffer(input_buffer_t * inputBuffer, char *data, int dataSize){
+void loadIntoInitBuffer(input_buffer_t * inputBuffer, const char *data, int dataSize){
     while(dataSize > inputBuffer->capacity){
         reallocInputBuffer(inputBuffer);
     }
@@ -101,6 +101,11 @@ int removeFromInputBuffer(input_buffer_t *inputBuffer){
 
 void printInputBuffer(const input_buffer_t *inputBuffer){
     fwrite(inputBuffer->data, sizeof(char), inputBuffer->size, stdout);
+
+    // put the cursor in its place
+    for(int i = 0; i< inputBuffer->size - inputBuffer->cursor; i++){
+        printf("\033[D");
+    }
     fflush(stdout);
 }
 
