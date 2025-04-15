@@ -96,7 +96,8 @@ int removeFromInputBuffer(input_buffer_t *inputBuffer){
 
 
 void printInputBuffer(input_buffer_t inputBuffer){
-
+    fwrite(inputBuffer.data, sizeof(char), inputBuffer.size, stdout);
+    fflush(stdout);
 }
 
 int shiftRightInputBuffer(input_buffer_t *inputBuffer){
