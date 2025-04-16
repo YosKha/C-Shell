@@ -28,22 +28,26 @@ input_buffer_t *initInputBuffer(){
 }
 
 void freeInputBuffer(input_buffer_t *inputBuffer){
-    if(inputBuffer->data){
-        free(inputBuffer->data);
-    }
-    if(inputBuffer){
+    if(inputBuffer) {
+        if (inputBuffer->data) {
+            free(inputBuffer->data);
+        }
         free(inputBuffer);
     }
 }
 
 void reallocInputBuffer(input_buffer_t *inputBuffer){
+    if(!inputBuffer){
+        fprintf(stderr, "lsh : invalid argument in reallocInputBuffer, null-pointer");
+        return;
+    }
     int newCapacity = inputBuffer->capacity + INPUT_BUFSIZE;
     inputBuffer = realloc(inputBuffer, newCapacity);
     if(!inputBuffer){
         fprintf(stderr, "lsh : realloc failed\n");
         return;
     }
-    inputBuffer->capacity = inputBuffer->capacity + INPUT_BUFSIZE;
+    inputBuffer->capacity = newCapacity;
 }
 
 
